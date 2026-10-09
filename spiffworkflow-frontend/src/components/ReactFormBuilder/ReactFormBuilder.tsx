@@ -26,6 +26,7 @@ import {
 } from 'react-error-boundary';
 import HttpService from '../../services/HttpService';
 import ExamplesTable from './ExamplesTable';
+import insertExampleFields from './insertExampleFields';
 import CustomForm from '../CustomForm';
 import { Notification } from '../Notification';
 
@@ -345,11 +346,14 @@ export default function ReactFormBuilder({
     setFormData(merge(formData, data));
     updateStrData(JSON.stringify(formData, null, 2));
 
-    const tempSchema = merge(JSON.parse(strSchema), schema);
-    updateStrSchema(JSON.stringify(tempSchema, null, 2));
-
-    const tempUI = merge(JSON.parse(strUI), ui);
-    updateStrUi(JSON.stringify(tempUI, null, 2));
+    const inserted = insertExampleFields(
+      JSON.parse(strSchema),
+      JSON.parse(strUI),
+      schema,
+      ui,
+    );
+    updateStrSchema(JSON.stringify(inserted.schema, null, 2));
+    updateStrUi(JSON.stringify(inserted.ui, null, 2));
   }
 
   function addOptionsToSchema(schema: any, data: any) {
