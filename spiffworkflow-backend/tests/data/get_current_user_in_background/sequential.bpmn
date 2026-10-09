@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" id="Definitions_gcu_seq" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:process id="get_current_user_sequential" isExecutable="true">
+    <bpmn:startEvent id="start">
+      <bpmn:outgoing>flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="flow_1" sourceRef="start" targetRef="who_am_i" />
+    <bpmn:scriptTask id="who_am_i" name="Who am I">
+      <bpmn:incoming>flow_1</bpmn:incoming>
+      <bpmn:outgoing>flow_2</bpmn:outgoing>
+      <bpmn:script>current_username = get_current_user()["username"]</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="flow_2" sourceRef="who_am_i" targetRef="end" />
+    <bpmn:endEvent id="end">
+      <bpmn:incoming>flow_2</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+</bpmn:definitions>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" id="Definitions_gcu_par" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:process id="get_current_user_parallel" isExecutable="true">
+    <bpmn:startEvent id="start">
+      <bpmn:outgoing>flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="flow_1" sourceRef="start" targetRef="split" />
+    <bpmn:parallelGateway id="split">
+      <bpmn:incoming>flow_1</bpmn:incoming>
+      <bpmn:outgoing>flow_a</bpmn:outgoing>
+      <bpmn:outgoing>flow_b</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="flow_a" sourceRef="split" targetRef="who_am_i_a" />
+    <bpmn:sequenceFlow id="flow_b" sourceRef="split" targetRef="who_am_i_b" />
+    <bpmn:scriptTask id="who_am_i_a" name="Who am I A">
+      <bpmn:incoming>flow_a</bpmn:incoming>
+      <bpmn:outgoing>flow_a2</bpmn:outgoing>
+      <bpmn:script>username_a = get_current_user()["username"]</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="who_am_i_b" name="Who am I B">
+      <bpmn:incoming>flow_b</bpmn:incoming>
+      <bpmn:outgoing>flow_b2</bpmn:outgoing>
+      <bpmn:script>username_b = get_current_user()["username"]</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="flow_a2" sourceRef="who_am_i_a" targetRef="join" />
+    <bpmn:sequenceFlow id="flow_b2" sourceRef="who_am_i_b" targetRef="join" />
+    <bpmn:parallelGateway id="join">
+      <bpmn:incoming>flow_a2</bpmn:incoming>
+      <bpmn:incoming>flow_b2</bpmn:incoming>
+      <bpmn:outgoing>flow_end</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="flow_end" sourceRef="join" targetRef="end" />
+    <bpmn:endEvent id="end">
+      <bpmn:incoming>flow_end</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+</bpmn:definitions>
