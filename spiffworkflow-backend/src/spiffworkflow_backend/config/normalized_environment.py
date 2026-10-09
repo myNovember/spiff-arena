@@ -5,6 +5,12 @@ from collections.abc import Iterable
 
 
 def normalized_environment(key_values: os._Environ) -> dict:
+    if os.name == "nt":
+        # windows upper-cases env var names, but nested keys (e.g. AUTH_CONFIGS__0__uri) are expected lower-case
+        key_values = {
+            key.split("__", 1)[0] + (f"__{key.split('__', 1)[1].lower()}" if "__" in key else ""): value
+            for key, value in key_values.items()
+        }
     results = _parse_environment(key_values)
     if isinstance(results, dict):
         return results
